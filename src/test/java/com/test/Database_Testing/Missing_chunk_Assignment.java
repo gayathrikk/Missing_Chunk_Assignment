@@ -10,7 +10,7 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-public class Missing_chunk_Assignment_Test {
+public class Missing_chunk_Assignment {
 
     private final String host = "pp6.humanbrain.in";
     private final String user = "hbp";
@@ -153,3 +153,4 @@ public class Missing_chunk_Assignment_Test {
         }
     }
 }
+
