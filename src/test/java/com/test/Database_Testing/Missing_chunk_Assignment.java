@@ -17,7 +17,7 @@ public class Missing_chunk_Assignment {
         String fileName = "chunk_assignments.json";
 
         // Email credentials
-        String to = "ramanan@htic.iitm.ac.in";
+        String to = "gayuriche26@gmail.com";
         String from = "automationsoftware25@gmail.com";
         String emailPassword = "wjzcgaramsqvagxu"; // Gmail App Password
 
@@ -114,39 +114,37 @@ public class Missing_chunk_Assignment {
         return output.toString();
     }
 
-   // Send email using Gmail (HTML format)
-private static void sendEmail(String to, String from, String password, String subject, String body) {
-    Properties props = new Properties();
-    props.put("mail.smtp.host", "smtp.gmail.com");
-    props.put("mail.smtp.port", "587");
-    props.put("mail.smtp.auth", "true");
-    props.put("mail.smtp.starttls.enable", "true");
+    // Send email using Gmail (HTML format)
+    private static void sendEmail(String to, String from, String password, String subject, String body) {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
-    // ✅ Make final copies for inner class use
-    final String finalFrom = from;
-    final String finalPassword = password;
+        // ✅ Make final copies for inner class
+        final String finalFrom = from;
+        final String finalPassword = password;
 
-    javax.mail.Session mailSession = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
-        protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(finalFrom, finalPassword);
+        javax.mail.Session mailSession = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(finalFrom, finalPassword);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(mailSession);
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+
+            // ✅ Set HTML body
+            message.setContent(body, "text/html; charset=utf-8");
+
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
-    });
-
-    try {
-        Message message = new MimeMessage(mailSession);
-        message.setFrom(new InternetAddress(from));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject);
-
-        // ✅ Set HTML body
-        message.setContent(body, "text/html; charset=utf-8");
-
-        Transport.send(message);
-
-    } catch (MessagingException e) {
-        throw new RuntimeException(e);
     }
 }
-
-}
-
