@@ -1,6 +1,8 @@
 package com.test.Database_Testing;
 
 import com.jcraft.jsch.*;
+import org.testng.annotations.Test;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,25 +10,27 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
-public class Missing_chunk_Assignment {
-    public static void main(String[] args) {
-        String host = "pp6.humanbrain.in";
-        String user = "hbp";
-        String password = "Health#123";
-        String basePath = "/mnt/remote/tapebackup/staging";
-        String fileName = "chunk_assignments.json";
+public class Missing_chunk_Assignment_Test {
 
-        // Email credentials
-        String to = "gayuriche26@gmail.com";
-        String from = "automationsoftware25@gmail.com";
-        String emailPassword = "wjzcgaramsqvagxu"; // Gmail App Password
+    private final String host = "pp6.humanbrain.in";
+    private final String user = "hbp";
+    private final String sshPassword = "Health#123";
+    private final String basePath = "/mnt/remote/tapebackup/staging";
+    private final String fileName = "chunk_assignments.json";
 
+    // Email credentials
+    private final String to = "gayuriche26@gmail.com";
+    private final String from = "automationsoftware25@gmail.com";
+    private final String emailPassword = "wjzcgaramsqvagxu"; // Gmail App Password
+
+    @Test
+    public void checkMissingChunkAssignmentFiles() {
         StringBuilder missingFolders = new StringBuilder();
 
         try {
             // SSH session
             com.jcraft.jsch.Session session = new JSch().getSession(user, host, 22);
-            session.setPassword(password);
+            session.setPassword(sshPassword);
             session.setConfig("StrictHostKeyChecking", "no");
 
             System.out.println("Connecting to SSH...");
@@ -85,18 +89,19 @@ public class Missing_chunk_Assignment {
                         "Missing chunk_assignments.json Report",
                         emailBody.toString());
 
-                System.out.println("Email sent with missing folder details (HTML table).");
+                System.out.println("✅ Email sent with missing folder details (HTML table).");
             } else {
-                System.out.println("All folders have the file. No email sent.");
+                System.out.println("✅ All folders have the file. No email sent.");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            assert false : "Test failed due to exception: " + e.getMessage();
         }
     }
 
     // Execute command on SSH
-    private static String executeCommand(com.jcraft.jsch.Session session, String command) throws Exception {
+    private String executeCommand(com.jcraft.jsch.Session session, String command) throws Exception {
         Channel channel = session.openChannel("exec");
         ((ChannelExec) channel).setCommand(command);
 
@@ -115,7 +120,7 @@ public class Missing_chunk_Assignment {
     }
 
     // Send email using Gmail (HTML format)
-    private static void sendEmail(String to, String from, String password, String subject, String body) {
+    private void sendEmail(String to, String from, String password, String subject, String body) {
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
