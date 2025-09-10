@@ -19,7 +19,7 @@ public class Missing_chunk_Assignment {
     private final String fileName = "chunk_assignments.json";
 
     // Email credentials
-    private final String to = "gayuriche26@gmail.com";
+    private final String to = "ramanan@htic.iitm.ac.in";
     private final String from = "automationsoftware25@gmail.com";
     private final String emailPassword = "wjzcgaramsqvagxu"; // Gmail App Password
 
@@ -153,4 +153,5 @@ public class Missing_chunk_Assignment {
         }
     }
 }
+
 
