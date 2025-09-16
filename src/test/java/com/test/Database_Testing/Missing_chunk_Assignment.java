@@ -135,10 +135,13 @@ public class Missing_chunk_Assignment {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        // ✅ Explicitly javax.mail.Session
+        // ✅ Fix: make them final for inner class
+        final String finalFrom = from;
+        final String finalPassword = password;
+
         javax.mail.Session mailSession = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(from, password);
+                return new PasswordAuthentication(finalFrom, finalPassword);
             }
         });
 
