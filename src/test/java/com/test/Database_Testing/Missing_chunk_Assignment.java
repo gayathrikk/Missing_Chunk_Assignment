@@ -18,7 +18,7 @@ public class Missing_chunk_Assignment {
     private final String basePath = "/mnt/remote/tapebackup/staging";
     private final String fileName = "chunk_assignments.json";
 
-    // ✅ Correct email list declaration
+    // ✅ Email recipients
     private final String[] to = {
         "ramanan@htic.iitm.ac.in",
         "nitheshkumar.s@htic.iitm.ac.in"
@@ -32,8 +32,8 @@ public class Missing_chunk_Assignment {
         StringBuilder missingFolders = new StringBuilder();
 
         try {
-            // SSH session
-            Session session = new JSch().getSession(user, host, 22);
+            // ✅ SSH session (explicitly using jsch.Session)
+            com.jcraft.jsch.Session session = new JSch().getSession(user, host, 22);
             session.setPassword(sshPassword);
             session.setConfig("StrictHostKeyChecking", "no");
 
@@ -48,7 +48,7 @@ public class Missing_chunk_Assignment {
             for (String dir : dirs) {
                 if (dir.trim().isEmpty()) continue;
 
-                // ✅ Removed extra "/"
+                // ✅ Fixed extra "/" issue
                 String checkFileCmd = "[ -f " + dir + fileName + " ] && echo FOUND || echo NOT_FOUND";
                 String result = executeCommand(session, checkFileCmd).trim();
 
@@ -106,7 +106,7 @@ public class Missing_chunk_Assignment {
     }
 
     // Execute command on SSH
-    private String executeCommand(Session session, String command) throws Exception {
+    private String executeCommand(com.jcraft.jsch.Session session, String command) throws Exception {
         Channel channel = session.openChannel("exec");
         ((ChannelExec) channel).setCommand(command);
 
@@ -135,6 +135,7 @@ public class Missing_chunk_Assignment {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
+        // ✅ Explicitly javax.mail.Session
         javax.mail.Session mailSession = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(from, password);
@@ -145,7 +146,7 @@ public class Missing_chunk_Assignment {
             Message message = new MimeMessage(mailSession);
             message.setFrom(new InternetAddress(from));
 
-            // ✅ Convert array into comma-separated addresses
+            // Convert array into InternetAddress list
             InternetAddress[] recipientAddresses = new InternetAddress[to.length];
             for (int i = 0; i < to.length; i++) {
                 recipientAddresses[i] = new InternetAddress(to[i]);
