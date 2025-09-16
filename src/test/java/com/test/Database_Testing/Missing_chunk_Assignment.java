@@ -48,7 +48,8 @@ public class Missing_chunk_Assignment {
             for (String dir : dirs) {
                 if (dir.trim().isEmpty()) continue;
 
-                String checkFileCmd = "[ -f " + dir + "/" + fileName + " ] && echo FOUND || echo NOT_FOUND";
+                // ✅ Removed extra "/"
+                String checkFileCmd = "[ -f " + dir + fileName + " ] && echo FOUND || echo NOT_FOUND";
                 String result = executeCommand(session, checkFileCmd).trim();
 
                 if ("NOT_FOUND".equals(result)) {
@@ -66,7 +67,7 @@ public class Missing_chunk_Assignment {
                 emailBody.append("<html><body>");
                 emailBody.append("<p>The following folders are missing <b>")
                         .append(fileName).append("</b>:</p>");
-                emailBody.append("<table border='1' cellspacing='0' cellpadding='5'>");
+                emailBody.append("<table border='1' cellspacing='0' cellpadding='5' style='border-collapse:collapse;'>");
                 emailBody.append("<tr style='background-color:#f2f2f2;'>")
                         .append("<th>Sl.No</th>")
                         .append("<th>Folder Name</th>")
@@ -109,18 +110,21 @@ public class Missing_chunk_Assignment {
         Channel channel = session.openChannel("exec");
         ((ChannelExec) channel).setCommand(command);
 
-        InputStream in = channel.getInputStream();
-        channel.connect();
+        try (InputStream in = channel.getInputStream();
+             BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        StringBuilder output = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            output.append(line).append("\n");
+            channel.connect();
+
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+
+            return output.toString();
+        } finally {
+            channel.disconnect();
         }
-
-        channel.disconnect();
-        return output.toString();
     }
 
     // Send email using Gmail (HTML format)
@@ -131,12 +135,9 @@ public class Missing_chunk_Assignment {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        final String finalFrom = from;
-        final String finalPassword = password;
-
         javax.mail.Session mailSession = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(finalFrom, finalPassword);
+                return new PasswordAuthentication(from, password);
             }
         });
 
