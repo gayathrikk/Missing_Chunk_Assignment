@@ -21,7 +21,7 @@ public class Missing_chunk_Assignment {
     // ✅ Email recipients
     private final String[] to = {
         "ramanan@htic.iitm.ac.in",
-        "nitheshkumar.s@htic.iitm.ac.in"'
+        "nitheshkumar.s@htic.iitm.ac.in",
         "praveensp1010@gmail.com"
     };
 
@@ -167,4 +167,5 @@ public class Missing_chunk_Assignment {
         }
     }
 }
+
 
