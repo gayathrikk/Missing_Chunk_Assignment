@@ -14,7 +14,7 @@ public class Missing_chunk_Assignment {
 
     private final String host = "pp6.humanbrain.in";
     private final String user = "hbp";
-    private final String sshPassword = "Health#123";
+    private final String sshPassword = "hbpsgbclab@123";
     private final String basePath = "/mnt/remote/tapebackup/staging";
     private final String fileName = "chunk_assignments.json";
 
@@ -167,5 +167,6 @@ public class Missing_chunk_Assignment {
         }
     }
 }
+
 
 
